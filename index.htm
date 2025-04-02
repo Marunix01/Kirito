@@ -81,7 +81,8 @@
     function loginUser(event) {
         event.preventDefault();
         localStorage.setItem("loggedInUser", "user");
-        showPage("dashboard");
+        document.getElementById("login-signup").classList.add("hidden");
+        document.getElementById("dashboard").classList.remove("hidden");
     }
     function signUpUser(event) {
         event.preventDefault();
@@ -94,23 +95,26 @@
         if (document.getElementById("admin-email").value === "admin@example.com" &&
             document.getElementById("admin-password").value === "admin123") {
             localStorage.setItem("loggedInUser", "admin");
-            showPage("admin-panel");
+            document.getElementById("login-signup").classList.add("hidden");
+            document.getElementById("dashboard").classList.remove("hidden");
         } else {
             alert("Invalid admin credentials.");
         }
     }
     function showPage(pageId) {
-        document.querySelectorAll("section").forEach(section => section.classList.add("hidden"));
-        document.getElementById(pageId).classList.remove("hidden");
+        alert("Opening " + pageId);
     }
     function logout() {
         localStorage.removeItem("loggedInUser");
-        showPage("login-signup");
+        document.getElementById("dashboard").classList.add("hidden");
+        document.getElementById("login-signup").classList.remove("hidden");
     }
     window.onload = function() {
         let user = localStorage.getItem("loggedInUser");
-        if (user === "admin") showPage("admin-panel");
-        else if (user === "user") showPage("dashboard");
+        if (user === "admin" || user === "user") {
+            document.getElementById("login-signup").classList.add("hidden");
+            document.getElementById("dashboard").classList.remove("hidden");
+        }
     };
 </script>
 
