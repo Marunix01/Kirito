@@ -1,9 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Website with Admin Panel</title>
+    <title>Complete Admin & User Dashboard</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -13,9 +12,7 @@
             margin: 0;
             padding: 20px;
         }
-
         .hidden { display: none; }
-
         section {
             padding: 20px;
             background: white;
@@ -23,7 +20,6 @@
             margin-top: 20px;
             border-radius: 10px;
         }
-
         button {
             padding: 10px;
             background: blue;
@@ -32,7 +28,6 @@
             cursor: pointer;
             margin: 5px;
         }
-
         input, textarea {
             padding: 10px;
             width: 90%;
@@ -40,184 +35,84 @@
             display: block;
             text-align: center;
         }
-
         .delete-btn {
             background: red;
         }
     </style>
 </head>
 <body>
-
-    <!-- Login/Sign Up Section -->
     <section id="login-signup">
-        <h2>Welcome to My Website</h2>
-        <button onclick="toggleForm('sign-in-form')">User Sign In</button>
-        <button onclick="toggleForm('sign-up-form')">User Sign Up</button>
-        <button onclick="toggleForm('admin-login-form')">Admin Login</button>
-
+        <h2>Welcome</h2>
+        <button onclick="showForm('sign-in-form')">User Sign In</button>
+        <button onclick="showForm('sign-up-form')">User Sign Up</button>
+        <button onclick="showForm('admin-login-form')">Admin Login</button>
         <form id="sign-in-form" class="hidden" onsubmit="return loginUser(event)">
             <h3>User Sign In</h3>
             <input type="email" id="sign-in-email" placeholder="Email" required>
             <input type="password" id="sign-in-password" placeholder="Password" required>
             <button type="submit">Sign In</button>
         </form>
-
         <form id="sign-up-form" class="hidden" onsubmit="return signUpUser(event)">
             <h3>User Sign Up</h3>
             <input type="email" id="sign-up-email" placeholder="Email" required>
             <input type="password" id="sign-up-password" placeholder="Password" required>
             <button type="submit">Sign Up</button>
         </form>
-
         <form id="admin-login-form" class="hidden" onsubmit="return loginAdmin(event)">
             <h3>Admin Login</h3>
             <input type="email" id="admin-email" placeholder="Admin Email" required>
             <input type="password" id="admin-password" placeholder="Password" required>
             <button type="submit">Login</button>
         </form>
-    </section>
+    </section><section id="dashboard" class="hidden">
+    <h2>Dashboard</h2>
+    <button onclick="showPage('photos')">Photos</button>
+    <button onclick="showPage('videos')">Videos</button>
+    <button onclick="showPage('news')">News</button>
+    <button onclick="showPage('store')">Store</button>
+    <button onclick="logout()">Logout</button>
+</section>
 
-    <!-- Dashboard -->
-    <section id="dashboard" class="hidden">
-        <h2>Dashboard</h2>
-        <button onclick="showPage('photos')">Photos</button>
-        <button onclick="showPage('videos')">Videos</button>
-        <button onclick="showPage('news')">News</button>
-        <button onclick="showPage('store')">Store</button>
-        <button onclick="logout()">Logout</button>
-    </section>
-
-    <!-- Pages -->
-    <section id="photos" class="hidden">
-        <h2>Photos</h2>
-        <div id="photo-gallery"></div>
-        <button onclick="showPage('dashboard')">Back to Dashboard</button>
-    </section>
-
-    <section id="videos" class="hidden">
-        <h2>Videos</h2>
-        <div id="video-gallery"></div>
-        <button onclick="showPage('dashboard')">Back to Dashboard</button>
-    </section>
-
-    <section id="news" class="hidden">
-        <h2>News</h2>
-        <div id="news-section"></div>
-        <button onclick="showPage('dashboard')">Back to Dashboard</button>
-    </section>
-
-    <section id="store" class="hidden">
-        <h2>Store</h2>
-        <ul id="store-list"></ul>
-        <button onclick="showPage('dashboard')">Back to Dashboard</button>
-    </section>
-
-    <!-- Admin Panel -->
-    <section id="admin-panel" class="hidden">
-        <h2>Admin Panel</h2>
-        <button onclick="showPage('manage-photos')">Manage Photos</button>
-        <button onclick="showPage('manage-videos')">Manage Videos</button>
-        <button onclick="showPage('manage-news')">Manage News</button>
-        <button onclick="showPage('manage-store')">Manage Store</button>
-        <button onclick="logout()">Logout</button>
-    </section>
-
-    <!-- Admin Management Sections -->
-    <section id="manage-photos" class="hidden">
-        <h2>Manage Photos</h2>
-        <input type="text" id="photo-url" placeholder="Enter Photo URL">
-        <button onclick="addPhoto()">Add Photo</button>
-        <button onclick="showPage('admin-panel')">Back to Admin Panel</button>
-    </section>
-
-    <section id="manage-videos" class="hidden">
-        <h2>Manage Videos</h2>
-        <input type="text" id="video-url" placeholder="Enter Video URL">
-        <button onclick="addVideo()">Add Video</button>
-        <button onclick="showPage('admin-panel')">Back to Admin Panel</button>
-    </section>
-
-    <section id="manage-news" class="hidden">
-        <h2>Manage News</h2>
-        <textarea id="news-text" placeholder="Enter News"></textarea>
-        <button onclick="addNews()">Post News</button>
-        <button onclick="showPage('admin-panel')">Back to Admin Panel</button>
-    </section>
-
-    <section id="manage-store" class="hidden">
-        <h2>Manage Store</h2>
-        <input type="text" id="item-name" placeholder="Enter Item Name">
-        <input type="number" id="item-price" placeholder="Enter Price">
-        <button onclick="addStoreItem()">Add Item</button>
-        <button onclick="showPage('admin-panel')">Back to Admin Panel</button>
-    </section>
-
-    <script>
-        function toggleForm(formId) {
-            document.querySelectorAll("form").forEach(form => form.classList.add("hidden"));
-            document.getElementById(formId).classList.remove("hidden");
+<script>
+    function showForm(formId) {
+        document.querySelectorAll("form").forEach(form => form.classList.add("hidden"));
+        document.getElementById(formId).classList.remove("hidden");
+    }
+    function loginUser(event) {
+        event.preventDefault();
+        localStorage.setItem("loggedInUser", "user");
+        showPage("dashboard");
+    }
+    function signUpUser(event) {
+        event.preventDefault();
+        localStorage.setItem("user", document.getElementById("sign-up-email").value);
+        alert("Signup successful! Please log in.");
+        showForm('sign-in-form');
+    }
+    function loginAdmin(event) {
+        event.preventDefault();
+        if (document.getElementById("admin-email").value === "admin@example.com" &&
+            document.getElementById("admin-password").value === "admin123") {
+            localStorage.setItem("loggedInUser", "admin");
+            showPage("admin-panel");
+        } else {
+            alert("Invalid admin credentials.");
         }
-
-        function loginUser(event) {
-            event.preventDefault();
-            localStorage.setItem("loggedInUser", "user");
-            showPage("dashboard");
-        }
-
-        function loginAdmin(event) {
-            event.preventDefault();
-            if (document.getElementById("admin-email").value === "admin@example.com" &&
-                document.getElementById("admin-password").value === "admin123") {
-                localStorage.setItem("loggedInUser", "admin");
-                showPage("admin-panel");
-            } else {
-                alert("Invalid admin credentials.");
-            }
-        }
-
-        function signUpUser(event) {
-            event.preventDefault();
-            localStorage.setItem("user", document.getElementById("sign-up-email").value);
-            showPage("login-signup");
-        }
-
-        function showPage(pageId) {
-            document.querySelectorAll("section").forEach(section => section.classList.add("hidden"));
-            document.getElementById(pageId).classList.remove("hidden");
-        }
-
-        function logout() {
-            localStorage.removeItem("loggedInUser");
-            showPage("login-signup");
-        }
-
-        function addPhoto() {
-            let url = document.getElementById("photo-url").value;
-            document.getElementById("photo-gallery").innerHTML += `<img src="${url}" width="100"><button class="delete-btn" onclick="this.parentElement.remove()">Delete</button><br>`;
-        }
-
-        function addVideo() {
-            let url = document.getElementById("video-url").value;
-            document.getElementById("video-gallery").innerHTML += `<video src="${url}" width="200" controls></video><button class="delete-btn" onclick="this.parentElement.remove()">Delete</button><br>`;
-        }
-
-        function addNews() {
-            let news = document.getElementById("news-text").value;
-            document.getElementById("news-section").innerHTML += `<p>${news}</p><button class="delete-btn" onclick="this.parentElement.remove()">Delete</button><hr>`;
-        }
-
-        function addStoreItem() {
-            let item = document.getElementById("item-name").value;
-            let price = document.getElementById("item-price").value;
-            document.getElementById("store-list").innerHTML += `<li>${item} - $${price} <button class="delete-btn" onclick="this.parentElement.remove()">Delete</button></li>`;
-        }
-
-        window.onload = function() {
-            let user = localStorage.getItem("loggedInUser");
-            if (user === "admin") showPage("admin-panel");
-            else if (user === "user") showPage("dashboard");
-        };
-    </script>
+    }
+    function showPage(pageId) {
+        document.querySelectorAll("section").forEach(section => section.classList.add("hidden"));
+        document.getElementById(pageId).classList.remove("hidden");
+    }
+    function logout() {
+        localStorage.removeItem("loggedInUser");
+        showPage("login-signup");
+    }
+    window.onload = function() {
+        let user = localStorage.getItem("loggedInUser");
+        if (user === "admin") showPage("admin-panel");
+        else if (user === "user") showPage("dashboard");
+    };
+</script>
 
 </body>
 </html>
