@@ -5,38 +5,98 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Website</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; margin: 0; padding: 20px; }
-        nav { background: #333; padding: 10px; }
-        nav a { color: white; margin: 10px; text-decoration: none; font-size: 18px; }
-        section { display: none; padding: 20px; border: 1px solid #ddd; margin-top: 20px; }
-        .active { display: block; }
-        .store-item { display: inline-block; margin: 10px; padding: 10px; border: 1px solid #ccc; }
-        button { padding: 10px; background: blue; color: white; border: none; cursor: pointer; }
-        input[type="email"], input[type="password"] { padding: 10px; width: 200px; margin: 10px; }
-        form { display: none; margin-top: 20px; }
+        /* Gradient background for the entire page */
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(to right, #ff7e5f, #feb47b); /* Gradient background */
+            color: white;
+        }
+
+        nav {
+            background: #333;
+            padding: 10px;
+        }
+
+        nav a {
+            color: white;
+            margin: 10px;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        section {
+            display: none;
+            padding: 20px;
+            border: 1px solid #ddd;
+            margin-top: 20px;
+        }
+
+        .active {
+            display: block;
+        }
+
+        .store-item {
+            display: inline-block;
+            margin: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            padding: 10px;
+            background: blue;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        input[type="email"], input[type="password"] {
+            padding: 10px;
+            width: 200px;
+            margin: 10px;
+        }
+
+        form {
+            display: none;
+            margin-top: 20px;
+        }
+
+        /* Dashboard specific styles */
+        #dashboard {
+            background-color: white;
+            color: red;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .dashboard-button {
+            background: blue;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
     </style>
 </head>
 <body>
 
-    <nav>
-        <a href="#" onclick="showPage('dashboard')">Dashboard</a>
-        <a href="#" onclick="showPage('store')">Store</a>
-        <a href="#" onclick="showPage('news')">News</a>
-        <a href="#" onclick="showPage('media')">Photos & Videos</a>
-    </nav>
-
-    <!-- Dashboard Section -->
-    <section id="dashboard">
-        <h2>Dashboard</h2>
-        <button onclick="showSignInForm()">Sign In</button>
-        <button onclick="showSignUpForm()">Sign Up</button>
+    <!-- Login/Sign Up Section -->
+    <section id="login-signup">
+        <h2>Welcome to My Website</h2>
+        <button class="dashboard-button" onclick="showLoginForm()">Sign In</button>
+        <button class="dashboard-button" onclick="showSignUpForm()">Sign Up</button>
         
         <!-- Sign In Form -->
         <form id="sign-in-form">
             <h3>Sign In</h3>
             <input type="email" id="sign-in-email" placeholder="Email" required>
             <input type="password" id="sign-in-password" placeholder="Password" required>
-            <button type="submit">Submit</button>
+            <button type="submit">Sign In</button>
         </form>
         
         <!-- Sign Up Form -->
@@ -44,8 +104,18 @@
             <h3>Sign Up</h3>
             <input type="email" id="sign-up-email" placeholder="Email" required>
             <input type="password" id="sign-up-password" placeholder="Password" required>
-            <button type="submit">Submit</button>
+            <button type="submit">Sign Up</button>
         </form>
+    </section>
+
+    <!-- Dashboard Section -->
+    <section id="dashboard" class="active">
+        <h2>Welcome, User!</h2>
+        <p>This is your dashboard. From here, you can navigate to other sections:</p>
+        <button class="dashboard-button" onclick="showPage('store')">Store</button>
+        <button class="dashboard-button" onclick="showPage('news')">News</button>
+        <button class="dashboard-button" onclick="showPage('media')">Photos & Videos</button>
+        <button class="dashboard-button" onclick="logout()">Logout</button>
     </section>
 
     <!-- Store Section -->
@@ -80,26 +150,26 @@
     </section>
 
     <script>
-        // Function to show the correct page based on user click
+        let loggedIn = false;
+
+        // Show the correct page based on the clicked section
         function showPage(pageId) {
-            // Hide all sections
             const sections = document.querySelectorAll('section');
             sections.forEach(section => section.classList.remove('active'));
             
-            // Show the selected section
             const selectedPage = document.getElementById(pageId);
             if (selectedPage) {
                 selectedPage.classList.add('active');
             }
         }
 
-        // Function to show the Sign In form
-        function showSignInForm() {
+        // Show Sign In Form
+        function showLoginForm() {
             document.getElementById('sign-in-form').style.display = 'block';
             document.getElementById('sign-up-form').style.display = 'none';
         }
 
-        // Function to show the Sign Up form
+        // Show Sign Up Form
         function showSignUpForm() {
             document.getElementById('sign-up-form').style.display = 'block';
             document.getElementById('sign-in-form').style.display = 'none';
@@ -108,19 +178,27 @@
         // Handle Sign In Form Submit
         document.getElementById('sign-in-form').addEventListener('submit', function(e) {
             e.preventDefault();
+            loggedIn = true;
             alert('Signed In with Email: ' + document.getElementById('sign-in-email').value);
-            document.getElementById('sign-in-form').reset();
+            document.getElementById('login-signup').style.display = 'none';
+            showPage('dashboard');
         });
 
         // Handle Sign Up Form Submit
         document.getElementById('sign-up-form').addEventListener('submit', function(e) {
             e.preventDefault();
+            loggedIn = true;
             alert('Signed Up with Email: ' + document.getElementById('sign-up-email').value);
-            document.getElementById('sign-up-form').reset();
+            document.getElementById('login-signup').style.display = 'none';
+            showPage('dashboard');
         });
 
-        // By default, show the Dashboard when the page loads
-        showPage('dashboard');
+        // Logout functionality
+        function logout() {
+            loggedIn = false;
+            document.getElementById('login-signup').style.display = 'block';
+            showPage('login-signup');
+        }
     </script>
 
 </body>
