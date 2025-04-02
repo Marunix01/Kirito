@@ -48,15 +48,11 @@
             border-radius: 10px;
         }
 
-        .dashboard-button {
-            background: blue;
-            color: white;
-            padding: 10px 20px;
-            cursor: pointer;
-            margin: 5px;
+        .nav-button {
+            display: block;
+            margin-top: 10px;
+            background: red;
         }
-
-        .upload-section { margin-top: 20px; }
     </style>
 </head>
 <body>
@@ -104,29 +100,29 @@
     </section>
 
     <!-- Sections -->
-    <section id="photos" class="hidden"><h2>Photos Section</h2><div id="photo-content"></div></section>
-    <section id="videos" class="hidden"><h2>Videos Section</h2><div id="video-content"></div></section>
-    <section id="news" class="hidden"><h2>News Section</h2><div id="news-content"></div></section>
-    <section id="store" class="hidden"><h2>Store Section</h2><ul id="store-items"></ul></section>
+    <section id="photos" class="hidden"><h2>Photos</h2><div id="photo-content"></div><button class="nav-button" onclick="showPage('dashboard')">Back to Dashboard</button></section>
+    <section id="videos" class="hidden"><h2>Videos</h2><div id="video-content"></div><button class="nav-button" onclick="showPage('dashboard')">Back to Dashboard</button></section>
+    <section id="news" class="hidden"><h2>News</h2><div id="news-content"></div><button class="nav-button" onclick="showPage('dashboard')">Back to Dashboard</button></section>
+    <section id="store" class="hidden"><h2>Store</h2><ul id="store-items"></ul><button class="nav-button" onclick="showPage('dashboard')">Back to Dashboard</button></section>
 
     <!-- Admin Panel -->
     <section id="admin-panel" class="hidden">
         <h2>Admin Panel</h2>
         <button onclick="logout()">Logout</button>
 
-        <div class="upload-section">
+        <div>
             <h3>Upload Photos & Videos</h3>
             <input type="text" id="upload-file" placeholder="Enter Image/Video URL">
             <button onclick="uploadFile()">Upload</button>
         </div>
 
-        <div class="upload-section">
+        <div>
             <h3>Write News</h3>
             <textarea id="news-text" placeholder="Write your news..."></textarea>
             <button onclick="publishNews()">Publish</button>
         </div>
 
-        <div class="upload-section">
+        <div>
             <h3>Update Store</h3>
             <input type="text" id="store-item" placeholder="Item name">
             <input type="number" id="store-price" placeholder="Price">
@@ -138,21 +134,7 @@
         function showPage(pageId) {
             document.querySelectorAll('section').forEach(section => section.classList.add('hidden'));
             document.getElementById(pageId).classList.remove('hidden');
-        }
-
-        function showLoginForm() {
-            showPage('login-signup');
-            document.getElementById('sign-in-form').classList.remove('hidden');
-        }
-
-        function showSignUpForm() {
-            showPage('login-signup');
-            document.getElementById('sign-up-form').classList.remove('hidden');
-        }
-
-        function showAdminLoginForm() {
-            showPage('login-signup');
-            document.getElementById('admin-login-form').classList.remove('hidden');
+            loadContent();
         }
 
         function logout() {
@@ -165,13 +147,15 @@
             let photos = JSON.parse(localStorage.getItem('photos')) || [];
             photos.push(url);
             localStorage.setItem('photos', JSON.stringify(photos));
-            alert('Uploaded successfully!');
+            alert('Changes Saved!');
+            loadContent();
         }
 
         function publishNews() {
             const news = document.getElementById('news-text').value;
             localStorage.setItem('news', news);
-            alert('News published!');
+            alert('Changes Saved!');
+            loadContent();
         }
 
         function updateStore() {
@@ -180,7 +164,8 @@
             let store = JSON.parse(localStorage.getItem('store')) || [];
             store.push({ item, price });
             localStorage.setItem('store', JSON.stringify(store));
-            alert('Store updated!');
+            alert('Changes Saved!');
+            loadContent();
         }
 
         function loadContent() {
@@ -189,8 +174,23 @@
             document.getElementById('store-items').innerHTML = (JSON.parse(localStorage.getItem('store')) || []).map(s => `<li>${s.item} - $${s.price}</li>`).join('');
         }
 
-        window.onload = loadContent;
+        document.getElementById('sign-in-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            localStorage.setItem('loggedInUser', 'user');
+            showPage('dashboard');
+        });
+
+        document.getElementById('admin-login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            localStorage.setItem('loggedInUser', 'admin');
+            showPage('admin-panel');
+        });
+
+        window.onload = function() {
+            if (localStorage.getItem('loggedInUser') === 'admin') showPage('admin-panel');
+            else if (localStorage.getItem('loggedInUser')) showPage('dashboard');
+        };
     </script>
 
 </body>
-    </html>
+</html>
