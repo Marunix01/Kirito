@@ -3,23 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Website</title>
+    <title>Website with Admin Panel</title>
     <style>
-        /* Gradient background for the entire page */
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            margin: 0;
-            padding: 20px;
             background: linear-gradient(to right, #ff7e5f, #feb47b);
             color: white;
+            margin: 0;
+            padding: 20px;
         }
 
         section {
             display: none;
             padding: 20px;
-            border: 1px solid #ddd;
+            background: white;
+            color: black;
             margin-top: 20px;
+            border-radius: 10px;
         }
 
         .active {
@@ -32,6 +33,7 @@
             color: white;
             border: none;
             cursor: pointer;
+            margin: 5px;
         }
 
         input {
@@ -45,7 +47,11 @@
             margin-top: 20px;
         }
 
-        #dashboard {
+        .error {
+            color: red;
+        }
+
+        #dashboard, #admin-panel {
             background-color: white;
             color: red;
             padding: 20px;
@@ -55,14 +61,13 @@
         .dashboard-button {
             background: blue;
             color: white;
-            border: none;
             padding: 10px 20px;
             cursor: pointer;
             margin: 5px;
         }
 
-        .error {
-            color: red;
+        .upload-section {
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -74,7 +79,6 @@
         <button class="dashboard-button" onclick="showLoginForm()">Sign In</button>
         <button class="dashboard-button" onclick="showSignUpForm()">Sign Up</button>
         
-        <!-- Sign In Form -->
         <form id="sign-in-form">
             <h3>Sign In</h3>
             <input type="email" id="sign-in-email" placeholder="Email" required>
@@ -82,8 +86,7 @@
             <button type="submit">Sign In</button>
             <p id="sign-in-error" class="error" style="display:none;">Invalid email or password.</p>
         </form>
-        
-        <!-- Sign Up Form -->
+
         <form id="sign-up-form">
             <h3>Sign Up</h3>
             <input type="email" id="sign-up-email" placeholder="Email" required>
@@ -96,8 +99,35 @@
     <!-- Dashboard Section -->
     <section id="dashboard">
         <h2>Welcome, User!</h2>
-        <p>This is your dashboard. From here, you can navigate to other sections:</p>
         <button class="dashboard-button" onclick="logout()">Logout</button>
+    </section>
+
+    <!-- Admin Panel -->
+    <section id="admin-panel">
+        <h2>Admin Panel</h2>
+        <button class="dashboard-button" onclick="logout()">Logout</button>
+        
+        <div class="upload-section">
+            <h3>Upload Photos & Videos</h3>
+            <input type="file" id="upload-file">
+            <button onclick="uploadFile()">Upload</button>
+            <div id="uploaded-files"></div>
+        </div>
+
+        <div class="upload-section">
+            <h3>Write News</h3>
+            <textarea id="news-text" placeholder="Write your news..."></textarea>
+            <button onclick="publishNews()">Publish</button>
+            <div id="news-section"></div>
+        </div>
+
+        <div class="upload-section">
+            <h3>Update Store</h3>
+            <input type="text" id="store-item" placeholder="Item name">
+            <input type="number" id="store-price" placeholder="Price">
+            <button onclick="updateStore()">Add Item</button>
+            <div id="store-items"></div>
+        </div>
     </section>
 
     <script>
@@ -139,13 +169,17 @@
             const password = document.getElementById('sign-in-password').value;
 
             let users = JSON.parse(localStorage.getItem('users')) || [];
-            const user = users.find(u => u.email === email && u.password === password);
-
-            if (user) {
-                localStorage.setItem('loggedInUser', email);
-                showPage('dashboard');
+            if (email === "admin@admin.com" && password === "admin123") {
+                localStorage.setItem('loggedInUser', "admin");
+                showPage('admin-panel');
             } else {
-                document.getElementById('sign-in-error').style.display = 'block';
+                const user = users.find(u => u.email === email && u.password === password);
+                if (user) {
+                    localStorage.setItem('loggedInUser', email);
+                    showPage('dashboard');
+                } else {
+                    document.getElementById('sign-in-error').style.display = 'block';
+                }
             }
         });
 
@@ -154,9 +188,26 @@
             showPage('login-signup');
         }
 
+        function uploadFile() {
+            alert("File uploaded successfully!");
+        }
+
+        function publishNews() {
+            const newsText = document.getElementById('news-text').value;
+            document.getElementById('news-section').innerHTML += `<p>${newsText}</p>`;
+        }
+
+        function updateStore() {
+            const item = document.getElementById('store-item').value;
+            const price = document.getElementById('store-price').value;
+            document.getElementById('store-items').innerHTML += `<p>${item} - $${price}</p>`;
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             const loggedInUser = localStorage.getItem('loggedInUser');
-            if (loggedInUser) {
+            if (loggedInUser === "admin") {
+                showPage('admin-panel');
+            } else if (loggedInUser) {
                 showPage('dashboard');
             } else {
                 showPage('login-signup');
