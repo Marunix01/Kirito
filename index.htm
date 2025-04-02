@@ -187,10 +187,11 @@
         });
 
         window.onload = function() {
-            if (localStorage.getItem('loggedInUser') === 'admin') showPage('admin-panel');
-            else if (localStorage.getItem('loggedInUser')) showPage('dashboard');
+            const user = localStorage.getItem('loggedInUser');
+            if (user === 'admin') showPage('admin-panel');
+            else if (user === 'user') showPage('dashboard');
         };
     </script>
 
 </body>
-</html>
+    </html>
