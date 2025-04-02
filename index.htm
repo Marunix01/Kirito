@@ -41,7 +41,9 @@
             text-align: center;
         }
 
-        .error { color: red; }
+        .delete-btn {
+            background: red;
+        }
     </style>
 </head>
 <body>
@@ -85,6 +87,31 @@
         <button onclick="logout()">Logout</button>
     </section>
 
+    <!-- Pages -->
+    <section id="photos" class="hidden">
+        <h2>Photos</h2>
+        <div id="photo-gallery"></div>
+        <button onclick="showPage('dashboard')">Back to Dashboard</button>
+    </section>
+
+    <section id="videos" class="hidden">
+        <h2>Videos</h2>
+        <div id="video-gallery"></div>
+        <button onclick="showPage('dashboard')">Back to Dashboard</button>
+    </section>
+
+    <section id="news" class="hidden">
+        <h2>News</h2>
+        <div id="news-section"></div>
+        <button onclick="showPage('dashboard')">Back to Dashboard</button>
+    </section>
+
+    <section id="store" class="hidden">
+        <h2>Store</h2>
+        <ul id="store-list"></ul>
+        <button onclick="showPage('dashboard')">Back to Dashboard</button>
+    </section>
+
     <!-- Admin Panel -->
     <section id="admin-panel" class="hidden">
         <h2>Admin Panel</h2>
@@ -101,7 +128,6 @@
         <input type="text" id="photo-url" placeholder="Enter Photo URL">
         <button onclick="addPhoto()">Add Photo</button>
         <button onclick="showPage('admin-panel')">Back to Admin Panel</button>
-        <div id="photo-gallery"></div>
     </section>
 
     <section id="manage-videos" class="hidden">
@@ -109,7 +135,6 @@
         <input type="text" id="video-url" placeholder="Enter Video URL">
         <button onclick="addVideo()">Add Video</button>
         <button onclick="showPage('admin-panel')">Back to Admin Panel</button>
-        <div id="video-gallery"></div>
     </section>
 
     <section id="manage-news" class="hidden">
@@ -117,7 +142,6 @@
         <textarea id="news-text" placeholder="Enter News"></textarea>
         <button onclick="addNews()">Post News</button>
         <button onclick="showPage('admin-panel')">Back to Admin Panel</button>
-        <div id="news-section"></div>
     </section>
 
     <section id="manage-store" class="hidden">
@@ -126,7 +150,6 @@
         <input type="number" id="item-price" placeholder="Enter Price">
         <button onclick="addStoreItem()">Add Item</button>
         <button onclick="showPage('admin-panel')">Back to Admin Panel</button>
-        <ul id="store-list"></ul>
     </section>
 
     <script>
@@ -170,23 +193,23 @@
 
         function addPhoto() {
             let url = document.getElementById("photo-url").value;
-            document.getElementById("photo-gallery").innerHTML += `<img src="${url}" width="100"><br>`;
+            document.getElementById("photo-gallery").innerHTML += `<img src="${url}" width="100"><button class="delete-btn" onclick="this.parentElement.remove()">Delete</button><br>`;
         }
 
         function addVideo() {
             let url = document.getElementById("video-url").value;
-            document.getElementById("video-gallery").innerHTML += `<video src="${url}" width="200" controls></video><br>`;
+            document.getElementById("video-gallery").innerHTML += `<video src="${url}" width="200" controls></video><button class="delete-btn" onclick="this.parentElement.remove()">Delete</button><br>`;
         }
 
         function addNews() {
             let news = document.getElementById("news-text").value;
-            document.getElementById("news-section").innerHTML += `<p>${news}</p><hr>`;
+            document.getElementById("news-section").innerHTML += `<p>${news}</p><button class="delete-btn" onclick="this.parentElement.remove()">Delete</button><hr>`;
         }
 
         function addStoreItem() {
             let item = document.getElementById("item-name").value;
             let price = document.getElementById("item-price").value;
-            document.getElementById("store-list").innerHTML += `<li>${item} - $${price}</li>`;
+            document.getElementById("store-list").innerHTML += `<li>${item} - $${price} <button class="delete-btn" onclick="this.parentElement.remove()">Delete</button></li>`;
         }
 
         window.onload = function() {
