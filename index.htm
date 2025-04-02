@@ -64,12 +64,21 @@
             <input type="password" id="admin-password" placeholder="Password" required>
             <button type="submit">Login</button>
         </form>
-    </section><section id="dashboard" class="hidden">
-    <h2>Dashboard</h2>
-    <button onclick="showPage('photos')">Photos</button>
-    <button onclick="showPage('videos')">Videos</button>
-    <button onclick="showPage('news')">News</button>
-    <button onclick="showPage('store')">Store</button>
+    </section><section id="user-dashboard" class="hidden">
+    <h2>User Dashboard</h2>
+    <button onclick="showPage('photos')">View Photos</button>
+    <button onclick="showPage('videos')">View Videos</button>
+    <button onclick="showPage('news')">View News</button>
+    <button onclick="showPage('store')">View Store</button>
+    <button onclick="logout()">Logout</button>
+</section>
+
+<section id="admin-dashboard" class="hidden">
+    <h2>Admin Dashboard</h2>
+    <button onclick="showPage('manage-photos')">Manage Photos</button>
+    <button onclick="showPage('manage-videos')">Manage Videos</button>
+    <button onclick="showPage('manage-news')">Manage News</button>
+    <button onclick="showPage('manage-store')">Manage Store</button>
     <button onclick="logout()">Logout</button>
 </section>
 
@@ -82,7 +91,7 @@
         event.preventDefault();
         localStorage.setItem("loggedInUser", "user");
         document.getElementById("login-signup").classList.add("hidden");
-        document.getElementById("dashboard").classList.remove("hidden");
+        document.getElementById("user-dashboard").classList.remove("hidden");
     }
     function signUpUser(event) {
         event.preventDefault();
@@ -96,7 +105,7 @@
             document.getElementById("admin-password").value === "admin123") {
             localStorage.setItem("loggedInUser", "admin");
             document.getElementById("login-signup").classList.add("hidden");
-            document.getElementById("dashboard").classList.remove("hidden");
+            document.getElementById("admin-dashboard").classList.remove("hidden");
         } else {
             alert("Invalid admin credentials.");
         }
@@ -106,14 +115,18 @@
     }
     function logout() {
         localStorage.removeItem("loggedInUser");
-        document.getElementById("dashboard").classList.add("hidden");
+        document.getElementById("user-dashboard").classList.add("hidden");
+        document.getElementById("admin-dashboard").classList.add("hidden");
         document.getElementById("login-signup").classList.remove("hidden");
     }
     window.onload = function() {
         let user = localStorage.getItem("loggedInUser");
-        if (user === "admin" || user === "user") {
+        if (user === "admin") {
             document.getElementById("login-signup").classList.add("hidden");
-            document.getElementById("dashboard").classList.remove("hidden");
+            document.getElementById("admin-dashboard").classList.remove("hidden");
+        } else if (user === "user") {
+            document.getElementById("login-signup").classList.add("hidden");
+            document.getElementById("user-dashboard").classList.remove("hidden");
         }
     };
 </script>
