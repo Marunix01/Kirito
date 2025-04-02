@@ -104,19 +104,19 @@
     </section>
 
     <!-- Sections -->
-    <section id="photos" class="hidden"><h2>Photos Section</h2></section>
-    <section id="videos" class="hidden"><h2>Videos Section</h2></section>
-    <section id="news" class="hidden"><h2>News Section</h2></section>
-    <section id="store" class="hidden"><h2>Store Section</h2></section>
+    <section id="photos" class="hidden"><h2>Photos Section</h2><div id="photo-content"></div></section>
+    <section id="videos" class="hidden"><h2>Videos Section</h2><div id="video-content"></div></section>
+    <section id="news" class="hidden"><h2>News Section</h2><div id="news-content"></div></section>
+    <section id="store" class="hidden"><h2>Store Section</h2><ul id="store-items"></ul></section>
 
     <!-- Admin Panel -->
     <section id="admin-panel" class="hidden">
         <h2>Admin Panel</h2>
         <button onclick="logout()">Logout</button>
-        
+
         <div class="upload-section">
             <h3>Upload Photos & Videos</h3>
-            <input type="file" id="upload-file">
+            <input type="text" id="upload-file" placeholder="Enter Image/Video URL">
             <button onclick="uploadFile()">Upload</button>
         </div>
 
@@ -155,52 +155,42 @@
             document.getElementById('admin-login-form').classList.remove('hidden');
         }
 
-        document.getElementById('sign-up-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const email = document.getElementById('sign-up-email').value;
-            const password = document.getElementById('sign-up-password').value;
-
-            if (password.length < 5) {
-                document.getElementById('sign-up-error').classList.remove('hidden');
-            } else {
-                let users = JSON.parse(localStorage.getItem('users')) || [];
-                users.push({ email, password });
-                localStorage.setItem('users', JSON.stringify(users));
-                alert('Sign-up successful! Please log in.');
-                showLoginForm();
-            }
-        });
-
-        document.getElementById('sign-in-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const email = document.getElementById('sign-in-email').value;
-            const password = document.getElementById('sign-in-password').value;
-            let users = JSON.parse(localStorage.getItem('users')) || [];
-
-            if (users.some(u => u.email === email && u.password === password)) {
-                localStorage.setItem('loggedInUser', email);
-                showPage('dashboard');
-            } else {
-                document.getElementById('sign-in-error').classList.remove('hidden');
-            }
-        });
-
-        document.getElementById('admin-login-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            if (document.getElementById('admin-email').value === "admin@mysite.com" &&
-                document.getElementById('admin-password').value === "AdminPass123") {
-                localStorage.setItem('loggedInUser', "admin");
-                showPage('admin-panel');
-            } else {
-                document.getElementById('admin-login-error').classList.remove('hidden');
-            }
-        });
-
         function logout() {
             localStorage.removeItem('loggedInUser');
             showPage('login-signup');
         }
+
+        function uploadFile() {
+            const url = document.getElementById('upload-file').value;
+            let photos = JSON.parse(localStorage.getItem('photos')) || [];
+            photos.push(url);
+            localStorage.setItem('photos', JSON.stringify(photos));
+            alert('Uploaded successfully!');
+        }
+
+        function publishNews() {
+            const news = document.getElementById('news-text').value;
+            localStorage.setItem('news', news);
+            alert('News published!');
+        }
+
+        function updateStore() {
+            const item = document.getElementById('store-item').value;
+            const price = document.getElementById('store-price').value;
+            let store = JSON.parse(localStorage.getItem('store')) || [];
+            store.push({ item, price });
+            localStorage.setItem('store', JSON.stringify(store));
+            alert('Store updated!');
+        }
+
+        function loadContent() {
+            document.getElementById('photo-content').innerHTML = (JSON.parse(localStorage.getItem('photos')) || []).map(p => `<img src="${p}" width="200">`).join('');
+            document.getElementById('news-content').innerHTML = localStorage.getItem('news') || 'No news yet.';
+            document.getElementById('store-items').innerHTML = (JSON.parse(localStorage.getItem('store')) || []).map(s => `<li>${s.item} - $${s.price}</li>`).join('');
+        }
+
+        window.onload = loadContent;
     </script>
 
 </body>
-</html>
+    </html>
