@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Website</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin: 0; padding: 20px; }
+        nav { background: #333; padding: 10px; }
+        nav a { color: white; margin: 10px; text-decoration: none; font-size: 18px; }
+        section { margin: 20px 0; padding: 20px; border: 1px solid #ddd; }
+        .store-item { display: inline-block; margin: 10px; padding: 10px; border: 1px solid #ccc; }
+        button { padding: 10px; background: blue; color: white; border: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="#dashboard">Dashboard</a>
+        <a href="#store">Store</a>
+        <a href="#news">News</a>
+        <a href="#media">Photos & Videos</a>
+    </nav>
+
+    <section id="dashboard">
+        <h2>Dashboard</h2>
+        <button onclick="alert('Sign In Clicked')">Sign In</button>
+        <button onclick="alert('Sign Up Clicked')">Sign Up</button>
+    </section>
+
+    <section id="store">
+        <h2>Store</h2>
+        <div class="store-item">
+            <h3>Digital Item 1</h3>
+            <p>Price: $10.00</p>
+            <button onclick="alert('Item Purchased!')">Buy Now</button>
+        </div>
+        <div class="store-item">
+            <h3>Digital Item 2</h3>
+            <p>Price: $20.00</p>
+            <button onclick="alert('Item Purchased!')">Buy Now</button>
+        </div>
+    </section>
+
+    <section id="news">
+        <h2>Latest News</h2>
+        <p>Stay updated with the latest trends and announcements.</p>
+    </section>
+
+    <section id="media">
+        <h2>Photos & Videos</h2>
+        <img src="https://via.placeholder.com/150" alt="Sample Photo">
+        <video width="320" height="240" controls>
+            <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </section>
+
+</body>
+</html>
