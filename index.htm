@@ -11,20 +11,8 @@
             text-align: center;
             margin: 0;
             padding: 20px;
-            background: linear-gradient(to right, #ff7e5f, #feb47b); /* Gradient background */
+            background: linear-gradient(to right, #ff7e5f, #feb47b);
             color: white;
-        }
-
-        nav {
-            background: #333;
-            padding: 10px;
-        }
-
-        nav a {
-            color: white;
-            margin: 10px;
-            text-decoration: none;
-            font-size: 18px;
         }
 
         section {
@@ -38,13 +26,6 @@
             display: block;
         }
 
-        .store-item {
-            display: inline-block;
-            margin: 10px;
-            padding: 10px;
-            border: 1px solid #ccc;
-        }
-
         button {
             padding: 10px;
             background: blue;
@@ -53,7 +34,7 @@
             cursor: pointer;
         }
 
-        input[type="email"], input[type="password"] {
+        input {
             padding: 10px;
             width: 200px;
             margin: 10px;
@@ -64,7 +45,6 @@
             margin-top: 20px;
         }
 
-        /* Dashboard specific styles */
         #dashboard {
             background-color: white;
             color: red;
@@ -84,7 +64,6 @@
         .error {
             color: red;
         }
-
     </style>
 </head>
 <body>
@@ -101,7 +80,7 @@
             <input type="email" id="sign-in-email" placeholder="Email" required>
             <input type="password" id="sign-in-password" placeholder="Password" required>
             <button type="submit">Sign In</button>
-            <p id="sign-in-error" class="error" style="display:none;">User doesn't exist.</p>
+            <p id="sign-in-error" class="error" style="display:none;">Invalid email or password.</p>
         </form>
         
         <!-- Sign Up Form -->
@@ -110,96 +89,33 @@
             <input type="email" id="sign-up-email" placeholder="Email" required>
             <input type="password" id="sign-up-password" placeholder="Password" required>
             <button type="submit">Sign Up</button>
-            <p id="sign-up-error" class="error" style="display:none;">Password must include at least 5 characters.</p>
+            <p id="sign-up-error" class="error" style="display:none;">Password must be at least 5 characters.</p>
         </form>
     </section>
 
     <!-- Dashboard Section -->
-    <section id="dashboard" class="active">
+    <section id="dashboard">
         <h2>Welcome, User!</h2>
         <p>This is your dashboard. From here, you can navigate to other sections:</p>
-        <button class="dashboard-button" onclick="showPage('store')">Store</button>
-        <button class="dashboard-button" onclick="showPage('news')">News</button>
-        <button class="dashboard-button" onclick="showPage('media')">Photos & Videos</button>
         <button class="dashboard-button" onclick="logout()">Logout</button>
     </section>
 
-    <!-- Store Section -->
-    <section id="store">
-        <h2>Store</h2>
-        <div class="store-item">
-            <h3>Digital Item 1</h3>
-            <p>Price: $10.00</p>
-            <button onclick="alert('Item 1 Purchased!')">Buy Now</button>
-        </div>
-        <div class="store-item">
-            <h3>Digital Item 2</h3>
-            <p>Price: $20.00</p>
-            <button onclick="alert('Item 2 Purchased!')">Buy Now</button>
-        </div>
-    </section>
-
-    <!-- News Section -->
-    <section id="news">
-        <h2>Latest News</h2>
-        <p>Stay updated with the latest trends and announcements.</p>
-    </section>
-
-    <!-- Photos & Videos Section -->
-    <section id="media">
-        <h2>Photos & Videos</h2>
-        <img src="https://via.placeholder.com/150" alt="Sample Photo">
-        <video width="320" height="240" controls>
-            <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
-    </section>
-
     <script>
-        let users = []; // Store users as {email, password}
-        let loggedIn = false;
-
-        // Show the correct page based on the clicked section
         function showPage(pageId) {
-            const sections = document.querySelectorAll('section');
-            sections.forEach(section => section.classList.remove('active'));
-            
-            const selectedPage = document.getElementById(pageId);
-            if (selectedPage) {
-                selectedPage.classList.add('active');
-            }
+            document.querySelectorAll('section').forEach(section => section.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
         }
 
-        // Show Sign In Form
         function showLoginForm() {
             document.getElementById('sign-in-form').style.display = 'block';
             document.getElementById('sign-up-form').style.display = 'none';
         }
 
-        // Show Sign Up Form
         function showSignUpForm() {
             document.getElementById('sign-up-form').style.display = 'block';
             document.getElementById('sign-in-form').style.display = 'none';
         }
 
-        // Handle Sign In Form Submit
-        document.getElementById('sign-in-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const email = document.getElementById('sign-in-email').value;
-            const password = document.getElementById('sign-in-password').value;
-            const user = users.find(u => u.email === email && u.password === password);
-
-            if (user) {
-                loggedIn = true;
-                document.getElementById('sign-in-error').style.display = 'none';
-                document.getElementById('login-signup').style.display = 'none';
-                showPage('dashboard');
-            } else {
-                document.getElementById('sign-in-error').style.display = 'block';
-            }
-        });
-
-        // Handle Sign Up Form Submit
         document.getElementById('sign-up-form').addEventListener('submit', function(e) {
             e.preventDefault();
             const email = document.getElementById('sign-up-email').value;
@@ -208,20 +124,44 @@
             if (password.length < 5) {
                 document.getElementById('sign-up-error').style.display = 'block';
             } else {
+                let users = JSON.parse(localStorage.getItem('users')) || [];
                 users.push({ email, password });
-                loggedIn = true;
-                document.getElementById('sign-up-error').style.display = 'none';
-                document.getElementById('login-signup').style.display = 'none';
-                showPage('dashboard');
+                localStorage.setItem('users', JSON.stringify(users));
+
+                alert('Sign-up successful! Please log in.');
+                showLoginForm();
             }
         });
 
-        // Logout functionality
+        document.getElementById('sign-in-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('sign-in-email').value;
+            const password = document.getElementById('sign-in-password').value;
+
+            let users = JSON.parse(localStorage.getItem('users')) || [];
+            const user = users.find(u => u.email === email && u.password === password);
+
+            if (user) {
+                localStorage.setItem('loggedInUser', email);
+                showPage('dashboard');
+            } else {
+                document.getElementById('sign-in-error').style.display = 'block';
+            }
+        });
+
         function logout() {
-            loggedIn = false;
-            document.getElementById('login-signup').style.display = 'block';
+            localStorage.removeItem('loggedInUser');
             showPage('login-signup');
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const loggedInUser = localStorage.getItem('loggedInUser');
+            if (loggedInUser) {
+                showPage('dashboard');
+            } else {
+                showPage('login-signup');
+            }
+        });
     </script>
 
 </body>
