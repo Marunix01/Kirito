@@ -33,22 +33,15 @@
             margin: 5px;
         }
 
-        input {
+        input, textarea {
             padding: 10px;
-            width: 200px;
-            margin: 10px;
+            width: 90%;
+            margin: 10px auto;
             display: block;
             text-align: center;
         }
 
         .error { color: red; }
-
-        #dashboard, #admin-panel {
-            background-color: white;
-            color: red;
-            padding: 20px;
-            border-radius: 10px;
-        }
     </style>
 </head>
 <body>
@@ -65,7 +58,6 @@
             <input type="email" id="sign-in-email" placeholder="Email" required>
             <input type="password" id="sign-in-password" placeholder="Password" required>
             <button type="submit">Sign In</button>
-            <p id="sign-in-error" class="error hidden">Invalid email or password.</p>
         </form>
 
         <form id="sign-up-form" class="hidden" onsubmit="return signUpUser(event)">
@@ -73,7 +65,6 @@
             <input type="email" id="sign-up-email" placeholder="Email" required>
             <input type="password" id="sign-up-password" placeholder="Password" required>
             <button type="submit">Sign Up</button>
-            <p id="sign-up-error" class="error hidden">Password must be at least 5 characters.</p>
         </form>
 
         <form id="admin-login-form" class="hidden" onsubmit="return loginAdmin(event)">
@@ -81,11 +72,10 @@
             <input type="email" id="admin-email" placeholder="Admin Email" required>
             <input type="password" id="admin-password" placeholder="Password" required>
             <button type="submit">Login</button>
-            <p id="admin-login-error" class="error hidden">Invalid admin credentials.</p>
         </form>
     </section>
 
-    <!-- Dashboard Section -->
+    <!-- Dashboard -->
     <section id="dashboard" class="hidden">
         <h2>Dashboard</h2>
         <button onclick="showPage('photos')">Photos</button>
@@ -95,35 +85,48 @@
         <button onclick="logout()">Logout</button>
     </section>
 
-    <!-- Sections -->
-    <section id="photos" class="hidden">
-        <h2>Photos</h2>
-        <div id="photo-content"></div>
-        <button onclick="showPage('dashboard')">Back to Dashboard</button>
-    </section>
-
-    <section id="videos" class="hidden">
-        <h2>Videos</h2>
-        <div id="video-content"></div>
-        <button onclick="showPage('dashboard')">Back to Dashboard</button>
-    </section>
-
-    <section id="news" class="hidden">
-        <h2>News</h2>
-        <div id="news-content"></div>
-        <button onclick="showPage('dashboard')">Back to Dashboard</button>
-    </section>
-
-    <section id="store" class="hidden">
-        <h2>Store</h2>
-        <ul id="store-items"></ul>
-        <button onclick="showPage('dashboard')">Back to Dashboard</button>
-    </section>
-
     <!-- Admin Panel -->
     <section id="admin-panel" class="hidden">
         <h2>Admin Panel</h2>
+        <button onclick="showPage('manage-photos')">Manage Photos</button>
+        <button onclick="showPage('manage-videos')">Manage Videos</button>
+        <button onclick="showPage('manage-news')">Manage News</button>
+        <button onclick="showPage('manage-store')">Manage Store</button>
         <button onclick="logout()">Logout</button>
+    </section>
+
+    <!-- Admin Management Sections -->
+    <section id="manage-photos" class="hidden">
+        <h2>Manage Photos</h2>
+        <input type="text" id="photo-url" placeholder="Enter Photo URL">
+        <button onclick="addPhoto()">Add Photo</button>
+        <button onclick="showPage('admin-panel')">Back to Admin Panel</button>
+        <div id="photo-gallery"></div>
+    </section>
+
+    <section id="manage-videos" class="hidden">
+        <h2>Manage Videos</h2>
+        <input type="text" id="video-url" placeholder="Enter Video URL">
+        <button onclick="addVideo()">Add Video</button>
+        <button onclick="showPage('admin-panel')">Back to Admin Panel</button>
+        <div id="video-gallery"></div>
+    </section>
+
+    <section id="manage-news" class="hidden">
+        <h2>Manage News</h2>
+        <textarea id="news-text" placeholder="Enter News"></textarea>
+        <button onclick="addNews()">Post News</button>
+        <button onclick="showPage('admin-panel')">Back to Admin Panel</button>
+        <div id="news-section"></div>
+    </section>
+
+    <section id="manage-store" class="hidden">
+        <h2>Manage Store</h2>
+        <input type="text" id="item-name" placeholder="Enter Item Name">
+        <input type="number" id="item-price" placeholder="Enter Price">
+        <button onclick="addStoreItem()">Add Item</button>
+        <button onclick="showPage('admin-panel')">Back to Admin Panel</button>
+        <ul id="store-list"></ul>
     </section>
 
     <script>
@@ -140,29 +143,18 @@
 
         function loginAdmin(event) {
             event.preventDefault();
-            const adminEmail = document.getElementById("admin-email").value;
-            const adminPassword = document.getElementById("admin-password").value;
-
-            if (adminEmail === "admin@example.com" && adminPassword === "admin123") {
+            if (document.getElementById("admin-email").value === "admin@example.com" &&
+                document.getElementById("admin-password").value === "admin123") {
                 localStorage.setItem("loggedInUser", "admin");
                 showPage("admin-panel");
             } else {
-                document.getElementById("admin-login-error").classList.remove("hidden");
+                alert("Invalid admin credentials.");
             }
         }
 
         function signUpUser(event) {
             event.preventDefault();
-            const email = document.getElementById("sign-up-email").value;
-            const password = document.getElementById("sign-up-password").value;
-
-            if (password.length < 5) {
-                document.getElementById("sign-up-error").classList.remove("hidden");
-                return;
-            }
-
-            localStorage.setItem(email, password);
-            alert("Sign Up Successful! You can now log in.");
+            localStorage.setItem("user", document.getElementById("sign-up-email").value);
             showPage("login-signup");
         }
 
@@ -176,8 +168,29 @@
             showPage("login-signup");
         }
 
+        function addPhoto() {
+            let url = document.getElementById("photo-url").value;
+            document.getElementById("photo-gallery").innerHTML += `<img src="${url}" width="100"><br>`;
+        }
+
+        function addVideo() {
+            let url = document.getElementById("video-url").value;
+            document.getElementById("video-gallery").innerHTML += `<video src="${url}" width="200" controls></video><br>`;
+        }
+
+        function addNews() {
+            let news = document.getElementById("news-text").value;
+            document.getElementById("news-section").innerHTML += `<p>${news}</p><hr>`;
+        }
+
+        function addStoreItem() {
+            let item = document.getElementById("item-name").value;
+            let price = document.getElementById("item-price").value;
+            document.getElementById("store-list").innerHTML += `<li>${item} - $${price}</li>`;
+        }
+
         window.onload = function() {
-            const user = localStorage.getItem("loggedInUser");
+            let user = localStorage.getItem("loggedInUser");
             if (user === "admin") showPage("admin-panel");
             else if (user === "user") showPage("dashboard");
         };
