@@ -1,135 +1,233 @@
 <!DOCTYPE html><html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Complete Admin & User Dashboard</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background: linear-gradient(to right, #ff7e5f, #feb47b);
-            color: white;
-            margin: 0;
-            padding: 20px;
-        }
-        .hidden { display: none; }
-        section {
-            padding: 20px;
-            background: white;
-            color: black;
-            margin-top: 20px;
-            border-radius: 10px;
-        }
-        button {
-            padding: 10px;
-            background: blue;
-            color: white;
-            border: none;
-            cursor: pointer;
-            margin: 5px;
-        }
-        input, textarea {
-            padding: 10px;
-            width: 90%;
-            margin: 10px auto;
-            display: block;
-            text-align: center;
-        }
-        .delete-btn {
-            background: red;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fun Zone</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 2em;
+      background: linear-gradient(135deg, #fceabb, #f8b500);
+      color: #333;
+    }
+    .hidden {
+      display: none;
+    }
+    .section {
+      margin-top: 2em;
+      background: white;
+      padding: 1em;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    button, select {
+      margin: 1em;
+      padding: 0.6em 1.2em;
+      font-size: 1em;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      background: #f8b500;
+      color: white;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    button:hover {
+      background: #f59e00;
+    }
+    .dice-container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+      position: relative;
+    }
+    .dice {
+      width: 50px;
+      height: 50px;
+    }
+    .rolling {
+      animation: rolling 0.6s ease;
+    }
+    @keyframes rolling {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      25% { transform: translateY(-10px) rotate(90deg); }
+      50% { transform: translateY(5px) rotate(180deg); }
+      75% { transform: translateY(-5px) rotate(270deg); }
+    }
+    .particle {
+      width: 6px;
+      height: 6px;
+      background: gold;
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0;
+      animation: burst 0.6s forwards;
+    }
+    @keyframes burst {
+      0% {
+        transform: translate(0, 0) scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(var(--x), var(--y)) scale(0);
+        opacity: 0;
+      }
+    }
+  </style>
 </head>
 <body>
-    <section id="login-signup">
-        <h2>Welcome</h2>
-        <button onclick="showForm('sign-in-form')">User Sign In</button>
-        <button onclick="showForm('sign-up-form')">User Sign Up</button>
-        <button onclick="showForm('admin-login-form')">Admin Login</button>
-        <form id="sign-in-form" class="hidden" onsubmit="return loginUser(event)">
-            <h3>User Sign In</h3>
-            <input type="email" id="sign-in-email" placeholder="Email" required>
-            <input type="password" id="sign-in-password" placeholder="Password" required>
-            <button type="submit">Sign In</button>
-        </form>
-        <form id="sign-up-form" class="hidden" onsubmit="return signUpUser(event)">
-            <h3>User Sign Up</h3>
-            <input type="email" id="sign-up-email" placeholder="Email" required>
-            <input type="password" id="sign-up-password" placeholder="Password" required>
-            <button type="submit">Sign Up</button>
-        </form>
-        <form id="admin-login-form" class="hidden" onsubmit="return loginAdmin(event)">
-            <h3>Admin Login</h3>
-            <input type="email" id="admin-email" placeholder="Admin Email" required>
-            <input type="password" id="admin-password" placeholder="Password" required>
-            <button type="submit">Login</button>
-        </form>
-    </section><section id="user-dashboard" class="hidden">
-    <h2>User Dashboard</h2>
-    <button onclick="showPage('photos')">View Photos</button>
-    <button onclick="showPage('videos')">View Videos</button>
-    <button onclick="showPage('news')">View News</button>
-    <button onclick="showPage('store')">View Store</button>
-    <button onclick="logout()">Logout</button>
-</section>
+  <h1>Welcome to the Fun Zone</h1>
+  <div id="startSection">
+    <button onclick="showSection('dice')">Play Dice</button>
+    <button onclick="showSection('truthDare')">Truth & Dare</button>
+  </div>  <!-- Dice Roller Section -->  <div id="dice" class="section hidden">
+    <h2>Roll the Dice</h2>
+    <label for="diceCount">Choose number of dice:</label>
+    <select id="diceCount">
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+    </select>
+    <br />
+    <button onclick="rollDice()">Roll</button>
+    <button onclick="rollDice()">Re-roll</button>
+    <button onclick="goBack()">Back</button>
+    <div id="diceContainer" class="dice-container"></div>
+    <p id="diceResult" class="dice-result"></p>
+  </div>  <!-- Truth & Dare Section -->  <div id="truthDare" class="section hidden">
+    <h2>Truth or Dare</h2>
+    <button onclick="showTruth()">Truth</button>
+    <button onclick="showDare()">Dare</button>
+    <button onclick="showRandom()">Random</button>
+    <button onclick="goBack()">Back</button>
+    <p id="truthDareResult"></p>
+  </div>  <!-- Dice Roll Sound --><audio id="rollSound" src="https://www.myinstants.com/media/sounds/dice-roll.mp3" preload="auto"></audio>
 
-<section id="admin-dashboard" class="hidden">
-    <h2>Admin Dashboard</h2>
-    <button onclick="showPage('manage-photos')">Manage Photos</button>
-    <button onclick="showPage('manage-videos')">Manage Videos</button>
-    <button onclick="showPage('manage-news')">Manage News</button>
-    <button onclick="showPage('manage-store')">Manage Store</button>
-    <button onclick="logout()">Logout</button>
-</section>
-
-<script>
-    function showForm(formId) {
-        document.querySelectorAll("form").forEach(form => form.classList.add("hidden"));
-        document.getElementById(formId).classList.remove("hidden");
-    }
-    function loginUser(event) {
-        event.preventDefault();
-        localStorage.setItem("loggedInUser", "user");
-        document.getElementById("login-signup").classList.add("hidden");
-        document.getElementById("user-dashboard").classList.remove("hidden");
-    }
-    function signUpUser(event) {
-        event.preventDefault();
-        localStorage.setItem("user", document.getElementById("sign-up-email").value);
-        alert("Signup successful! Please log in.");
-        showForm('sign-in-form');
-    }
-    function loginAdmin(event) {
-        event.preventDefault();
-        if (document.getElementById("admin-email").value === "admin@example.com" &&
-            document.getElementById("admin-password").value === "admin123") {
-            localStorage.setItem("loggedInUser", "admin");
-            document.getElementById("login-signup").classList.add("hidden");
-            document.getElementById("admin-dashboard").classList.remove("hidden");
-        } else {
-            alert("Invalid admin credentials.");
-        }
-    }
-    function showPage(pageId) {
-        alert("Opening " + pageId);
-    }
-    function logout() {
-        localStorage.removeItem("loggedInUser");
-        document.getElementById("user-dashboard").classList.add("hidden");
-        document.getElementById("admin-dashboard").classList.add("hidden");
-        document.getElementById("login-signup").classList.remove("hidden");
-    }
-    window.onload = function() {
-        let user = localStorage.getItem("loggedInUser");
-        if (user === "admin") {
-            document.getElementById("login-signup").classList.add("hidden");
-            document.getElementById("admin-dashboard").classList.remove("hidden");
-        } else if (user === "user") {
-            document.getElementById("login-signup").classList.add("hidden");
-            document.getElementById("user-dashboard").classList.remove("hidden");
-        }
+  <script>
+    const diceImages = {
+      1: 'https://upload.wikimedia.org/wikipedia/commons/1/1b/Dice-1-b.svg',
+      2: 'https://upload.wikimedia.org/wikipedia/commons/5/5f/Dice-2-b.svg',
+      3: 'https://upload.wikimedia.org/wikipedia/commons/b/b1/Dice-3-b.svg',
+      4: 'https://upload.wikimedia.org/wikipedia/commons/f/fd/Dice-4-b.svg',
+      5: 'https://upload.wikimedia.org/wikipedia/commons/0/08/Dice-5-b.svg',
+      6: 'https://upload.wikimedia.org/wikipedia/commons/2/26/Dice-6-b.svg'
     };
-</script>
 
-</body>
+    const truths = [
+      "What is your favorite food?",
+      "Have you ever told a lie today?",
+      "What’s something silly you’re afraid of?",
+      "What's your favorite TV show?",
+      "Do you sing in the shower?",
+      "Have you ever eaten something off the floor?",
+      "What's the last photo you took?",
+      "If animals could talk, which would be the rudest?",
+      "What's your guilty pleasure?",
+      "What's a weird food combination you love?"
+    ];
+
+    const dares = [
+      "Do 10 jumping jacks!",
+      "Try to lick your elbow!",
+      "Do a funny face selfie!",
+      "Spin around 5 times and walk straight!",
+      "Balance a book on your head for 10 seconds!",
+      "Talk in a cartoon voice for a minute!",
+      "Pretend to be a chicken!",
+      "Act like your favorite animal!",
+      "Draw something with your eyes closed!",
+      "Send a silly meme to a friend!"
+    ];
+
+    function showSection(section) {
+      document.getElementById("startSection").classList.add("hidden");
+      document.getElementById("dice").classList.add("hidden");
+      document.getElementById("truthDare").classList.add("hidden");
+      document.getElementById(section).classList.remove("hidden");
+    }
+
+    function goBack() {
+      document.getElementById("dice").classList.add("hidden");
+      document.getElementById("truthDare").classList.add("hidden");
+      document.getElementById("startSection").classList.remove("hidden");
+    }
+
+    function rollDice() {
+      const count = parseInt(document.getElementById("diceCount").value);
+      const resultEl = document.getElementById("diceResult");
+      const container = document.getElementById("diceContainer");
+      const rollSound = document.getElementById("rollSound");
+
+      container.innerHTML = '';
+      resultEl.textContent = '';
+
+      rollSound.currentTime = 0;
+      rollSound.play();
+
+      let results = [];
+
+      for (let i = 0; i < count; i++) {
+        const wrapper = document.createElement("div");
+        wrapper.style.position = 'relative';
+
+        const img = document.createElement("img");
+        img.classList.add("dice", "rolling");
+        wrapper.appendChild(img);
+        container.appendChild(wrapper);
+
+        let rollInterval = setInterval(() => {
+          const randomFace = Math.floor(Math.random() * 6) + 1;
+          img.src = diceImages[randomFace];
+        }, 100);
+
+        setTimeout(() => {
+          clearInterval(rollInterval);
+          const roll = Math.floor(Math.random() * 6) + 1;
+          img.src = diceImages[roll];
+          results.push(roll);
+
+          // Particle burst
+          for (let j = 0; j < 8; j++) {
+            const particle = document.createElement("div");
+            particle.classList.add("particle");
+            const angle = Math.random() * 2 * Math.PI;
+            const radius = 30 + Math.random() * 20;
+            const x = Math.cos(angle) * radius + 'px';
+            const y = Math.sin(angle) * radius + 'px';
+            particle.style.setProperty('--x', x);
+            particle.style.setProperty('--y', y);
+            wrapper.appendChild(particle);
+          }
+
+          if (results.length === count) {
+            resultEl.textContent = "You rolled: " + results.join(", ");
+          }
+        }, 1000);
+      }
+    }
+
+    function showTruth() {
+      const randomTruth = truths[Math.floor(Math.random() * truths.length)];
+      document.getElementById("truthDareResult").textContent = randomTruth;
+    }
+
+    function showDare() {
+      const randomDare = dares[Math.floor(Math.random() * dares.length)];
+      document.getElementById("truthDareResult").textContent = randomDare;
+    }
+
+    function showRandom() {
+      if (Math.random() < 0.5) {
+        showTruth();
+      } else {
+        showDare();
+      }
+    }
+  </script></body>
 </html>
